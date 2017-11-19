@@ -104,10 +104,19 @@ EXPOSE 3000
 #EXPOSE 9229
 #EXPOSE 9222
 
+#Install the final needed npm packages
+WORKDIR /home/connextcms
+RUN npm install express
+RUN npm install dotenv
+RUN npm install keystone
+RUN npm install express-handlebars
+RUN npm install underscore
+RUN npm install request
+RUN npm install request-promise
+
 #Dummy app just to get the container running with docker-compose.
 #You can then enter the container with command: docker exec -it <container ID> /bin/bash
-#WORKDIR /home/connextcms
-#RUN ./mergeandlaunch
+RUN ./mergeandlaunch
 #WORKDIR /home/connextcms/myCMS
 #CMD ["node", "dummyapp.js"]
 
