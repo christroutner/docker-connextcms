@@ -4,3 +4,4 @@
 #This file is saved in the public directory so that changes persist.
 cd ~/theme/site-template-connextcms/
 ./merge-site
+

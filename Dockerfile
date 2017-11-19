@@ -38,7 +38,7 @@ RUN apt-get install -y python
 RUN apt-get install -y libkrb5-dev
 
 #Install Node and NPM
-RUN curl -sL https://deb.nodesource.com/setup_4.x -o nodesource_setup.sh
+RUN curl -sL https://deb.nodesource.com/setup_8.x -o nodesource_setup.sh
 RUN bash nodesource_setup.sh
 RUN apt-get install -y nodejs
 RUN apt-get install -y build-essential
@@ -63,7 +63,7 @@ VOLUME /home/connextcms/public
 USER connextcms
 
 #Clone the keystone files.
-RUN git clone https://github.com/skagitpublishing/keystone4-compiled
+RUN git clone https://github.com/christroutner/keystone4-compiled
 RUN mv keystone4-compiled keystone4
 
 #Clone ConnextCMS
@@ -92,11 +92,21 @@ RUN ./finalsetup
 EXPOSE 3000
 
 #Node-Inspector debug port
-#EXPOSE 8080
+#EXPOSE 9229
+#EXPOSE 9222
+
+#Install the final needed npm packages
+WORKDIR /home/connextcms
+RUN npm install express
+RUN npm install dotenv
+RUN npm install keystone
+RUN npm install express-handlebars
+RUN npm install underscore
+RUN npm install request
+RUN npm install request-promise
 
 #Dummy app just to get the container running with docker-compose.
 #You can then enter the container with command: docker exec -it <container ID> /bin/bash
-#WORKDIR /home/connextcms
 #RUN ./mergeandlaunch
 #WORKDIR /home/connextcms/myCMS
 #CMD ["node", "dummyapp.js"]
@@ -107,6 +117,3 @@ WORKDIR /home/connextcms
 
 #Run the mergeandlaunch script before starting Keystone with node.
 ENTRYPOINT ["./mergeandlaunch", "node", "keystone.js"]
-
-
-
