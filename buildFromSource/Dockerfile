@@ -11,7 +11,7 @@
 #docker run --name mongo -d -p 3500:27017 --rm -v <your path>/db:/data/db mongo
 
 #Execute my keystonejs docker image
-#docker container run --name keystonejs-build --link mongo:mongo --rm -it connextcms bash
+#docker container run --name keystonejs-build --link mongo:mongo --rm -it keystonejs-build bash
 
 
 
@@ -42,28 +42,24 @@ RUN apt-get install -y curl
 RUN apt-get install -y python
 RUN apt-get install -y nano
 
-#Install Node and NPM
-RUN curl -sL https://deb.nodesource.com/setup_4.x -o nodesource_setup.sh
-RUN bash nodesource_setup.sh
-RUN apt-get install -y nodejs
-RUN apt-get install -y build-essential
-RUN npm install -g npm
+#Log into the shell as the newly created user
+USER connextcms
+RUN echo 'password' | sudo -S pwd
 
+#Install Node and NPM
+RUN curl -sL https://deb.nodesource.com/setup_8.x -o nodesource_setup.sh
+RUN sudo bash nodesource_setup.sh
+RUN sudo apt-get install -y nodejs
+RUN sudo apt-get install -y build-essential
 
 #VOLUME /home/connextcms
 
-#Log into the shell as the newly created user
-USER connextcms
-
-RUN echo 'password' | sudo -S pwd
 RUN sudo npm install -g yo
-RUN sudo npm install -g generator-keystone
 RUN sudo chown -R connextcms .config
+RUN sudo npm install -g generator-keystone
 
 #Installation steps:
 # 1. run 'yo keystone' to build a KeystoneJS app using the yeoman generator
-# 2. change the permission of the .config file by running this command:
-#  sudo chown -R connextcms .config
-# 3. Add a line to the keystone.js file at the bottom of keystone.init() to instruct 
+# 2. Add a line to the keystone.js file at the bottom of keystone.init() to instruct
 #    KeystoneJS to connect to MongoDB running in a separate Container:
 #    'mongo': 'mongodb://172.17.0.1:3500/test'
